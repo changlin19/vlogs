@@ -48,7 +48,7 @@ func Set(serverName, logFilePath, logLevel, logOutput string, rotationTime time.
 
 func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration) {
 	var level zapcore.Level
-	var logCore *zapcore.Core
+	var logCore zapcore.Core
 	var logRotation *lumberjack.Logger
 
 	switch logLevel {
@@ -70,7 +70,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 	}
 
 	if logOutput == "cmd" {
-		logCore = &zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
+		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
 			TimeKey:        "T",
 			LevelKey:       "L",
 			NameKey:        "N",
@@ -88,7 +88,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxAge: 30, MaxSize: 1024 * 10}
 		w := zapcore.AddSync(logRotation)
 
-		logCore = &zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
+		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
 			TimeKey:        "T",
 			LevelKey:       "L",
 			NameKey:        "N",
