@@ -85,6 +85,12 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 		level = zap.WarnLevel
 	case "error":
 		level = zap.ErrorLevel
+	case "dpanic":
+		level = zap.DPanicLevel
+	case "panic":
+		level = zap.PanicLevel
+	case "fatal":
+		level = zap.FatalLevel
 	default:
 		level = zap.DebugLevel
 	}

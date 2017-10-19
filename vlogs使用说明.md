@@ -12,7 +12,7 @@ Zap用于打印json格式的日志，lumberjack.v2用于切割日志文件。
 3. SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration)参数说明:
 
         serverName:服务名
-        logLevel:日志等级
+        logLevel:日志等级(debug,info,warn,error,dpanic,panic,fatal,默认为debug)
         logFilePath:日志要输出的目标文件
         rotationTime:切割文件的间隔时间
 
@@ -20,7 +20,7 @@ Zap用于打印json格式的日志，lumberjack.v2用于切割日志文件。
 4. SetOutputWithStdout(serverName,logLevel string)参数说明:
 
         serverName:服务名
-        logLevel:日志等级
+        logLevel:日志等级(debug,info,warn,error,dpanic,panic,fatal,默认为debug)
 
 5. vlogs的日志有7个等级，调用的方法分别为:
 
