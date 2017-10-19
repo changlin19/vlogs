@@ -19,49 +19,49 @@ func Debug(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Debug(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Debug(fmt.Sprint(msg), fields...)
 }
 
 func Info(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Info(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Info(fmt.Sprint(msg), fields...)
 }
 
 func Warn(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Warn(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Warn(fmt.Sprint(msg), fields...)
 }
 
 func Error(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Error(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Error(fmt.Sprint(msg), fields...)
 }
 
 func Dpanic(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.DPanic(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).DPanic(fmt.Sprint(msg), fields...)
 }
 
 func Panic(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Panic(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Panic(fmt.Sprint(msg), fields...)
 }
 
 func Faltal(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Fatal(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Fatal(fmt.Sprint(msg), fields...)
 }
 
 func Set(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration) {
