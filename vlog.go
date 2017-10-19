@@ -15,6 +15,9 @@ var vesyncLog *zap.Logger
 var one sync.Once
 
 func Debug(msg string, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
 	vesyncLog.Debug(msg, fields...)
 }
 
