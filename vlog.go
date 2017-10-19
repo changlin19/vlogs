@@ -8,41 +8,60 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"fmt"
 )
 
 var vesyncLog *zap.Logger
 
 var one sync.Once
 
-func Debug(msg string, fields ...zapcore.Field) {
+func Debug(msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.Debug(msg, fields...)
+	vesyncLog.Debug(fmt.Sprint(msg), fields...)
 }
 
-func Info(msg string, fields ...zapcore.Field) {
-	vesyncLog.Info(msg, fields...)
+func Info(msg interface{}, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
+	vesyncLog.Info(fmt.Sprint(msg), fields...)
 }
 
-func Warn(msg string, fields ...zapcore.Field) {
-	vesyncLog.Warn(msg, fields...)
+func Warn(msg interface{}, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
+	vesyncLog.Warn(fmt.Sprint(msg), fields...)
 }
 
-func Error(msg string, fields ...zapcore.Field) {
-	vesyncLog.Error(msg, fields...)
+func Error(msg interface{}, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
+	vesyncLog.Error(fmt.Sprint(msg), fields...)
 }
 
-func Dpanic(msg string, fields ...zapcore.Field) {
-	vesyncLog.DPanic(msg, fields...)
+func Dpanic(msg interface{}, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
+	vesyncLog.DPanic(fmt.Sprint(msg), fields...)
 }
 
-func Panic(msg string, fields ...zapcore.Field) {
-	vesyncLog.Panic(msg, fields...)
+func Panic(msg interface{}, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
+	vesyncLog.Panic(fmt.Sprint(msg), fields...)
 }
 
-func Faltal(msg string, fields ...zapcore.Field) {
-	vesyncLog.Fatal(msg, fields...)
+func Faltal(msg interface{}, fields ...zapcore.Field) {
+	if vesyncLog == nil {
+		panic("vesynclog is nil")
+	}
+	vesyncLog.Fatal(fmt.Sprint(msg), fields...)
 }
 
 func Set(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration) {
