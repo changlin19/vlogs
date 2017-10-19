@@ -64,8 +64,11 @@ func Faltal(msg interface{}, fields ...zapcore.Field) {
 	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Fatal(fmt.Sprint(msg), fields...)
 }
 
-func Set(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration) {
-	newLogger(serverName, logFilePath, logLevel, logOutput, rotationTime)
+func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration) {
+	newLogger(serverName, logFilePath, logLevel, "file", rotationTime)
+}
+func SetOutputWithStdout(serverName,logLevel string) {
+	newLogger(serverName, "", logLevel, "cmd", time.Duration(time.Second))
 }
 
 func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration) {
@@ -107,7 +110,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 			EncodeName:     zapcore.FullNameEncoder,
 		}), os.Stdout, level)
 	} else {
-		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxAge: 30, MaxSize: 1024 * 10}
+		logRotation = &lumberjack.Logger{Filename: logFilePath}
 		w := zapcore.AddSync(logRotation)
 
 		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
