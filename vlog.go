@@ -64,14 +64,14 @@ func Faltal(msg interface{}, fields ...zapcore.Field) {
 	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Fatal(fmt.Sprint(msg), fields...)
 }
 
-func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration) {
-	newLogger(serverName, logFilePath, logLevel, "file", rotationTime)
+func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration,maxSize int) {
+	newLogger(serverName, logFilePath, logLevel, "file", rotationTime,maxSize)
 }
 func SetOutputWithStdout(serverName,logLevel string) {
-	newLogger(serverName, "", logLevel, "cmd", time.Duration(time.Second))
+	newLogger(serverName, "", logLevel, "cmd", time.Duration(time.Second),0)
 }
 
-func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration) {
+func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration,maxSize int) {
 	var level zapcore.Level
 	var logCore zapcore.Core
 	var logRotation *lumberjack.Logger
@@ -116,7 +116,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 			EncodeName:     zapcore.FullNameEncoder,
 		}), os.Stdout, level)
 	} else {
-		logRotation = &lumberjack.Logger{Filename: logFilePath}
+		logRotation = &lumberjack.Logger{Filename: logFilePath,MaxSize:maxSize}
 		w := zapcore.AddSync(logRotation)
 
 		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
