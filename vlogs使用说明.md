@@ -25,15 +25,17 @@ Zap用于打印json格式的日志，lumberjack.v2用于切割日志文件。
 
 5. vlogs的日志有7个等级，调用的方法分别为:
 
-        vlogs.Debug(msg interface{}, fields ...zapcore.Field)
-        vlogs.Info(msg interface{}, fields ...zapcore.Field)
-        vlogs.Error(msg interface{}, fields ...zapcore.Field)
-        vlogs.Warn(msg interface{}, fields ...zapcore.Field)
-        vlogs.Dpanic(msg interface{}, fields ...zapcore.Field)
-        vlogs.Panic(msg interface{}, fields ...zapcore.Field)
-        vlogs.Faltal(msg interface{}, fields ...zapcore.Field)
+        vlogs.Debug(callerSkip int,msg interface{}, fields ...zapcore.Field)
+        vlogs.Info(callerSkip int,msg interface{}, fields ...zapcore.Field)
+        vlogs.Error(callerSkip int,msg interface{}, fields ...zapcore.Field)
+        vlogs.Warn(callerSkip int,msg interface{}, fields ...zapcore.Field)
+        vlogs.Dpanic(callerSkip int,msg interface{}, fields ...zapcore.Field)
+        vlogs.Panic(callerSkip int,msg interface{}, fields ...zapcore.Field)
+        vlogs.Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field)
 
-`vlogs.Debug("123")`打印出来的数据:`{"L":"DEBUG","T":"2017-10-19T03:29:34.81968","N":"qwe","C":"vlogs/main.go:9","M":"123","H":"XD-ZJ-20170703N"}`
+callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+
+`vlogs.Debug(0,"123")`打印出来的数据:`{"L":"DEBUG","T":"2017-10-19T03:29:34.81968","N":"qwe","C":"vlogs/main.go:9","M":"123","H":"XD-ZJ-20170703N"}`
 
 vlogs默认的字段就是以上打印出来的字段:
 
@@ -49,5 +51,5 @@ vlogs默认的字段就是以上打印出来的字段:
 
 msg:msg中的数据会放到M这个字段中。
 
-fields:这个参数是用于添加字段的。例如:`vlogs.Debug("123",zap.String("k","v"))`这行代码就添加了一个字段。
+fields:这个参数是用于添加字段的。例如:`vlogs.Debug(0,"123",zap.String("k","v"))`这行代码就添加了一个字段。
 打印出来就是:`{"L":"DEBUG","T":"2017-10-19T03:42:03.59401","N":"qwe","C":"vlogs/main.go:10","M":"123","H":"XD-ZJ-20170703N","k":"v"}`
