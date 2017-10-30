@@ -5,73 +5,84 @@ import (
 	"sync"
 	"time"
 
+	"fmt"
+
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
-	"fmt"
 )
 
 var vesyncLog *zap.Logger
 
 var one sync.Once
 
-func Debug(msg interface{}, fields ...zapcore.Field) {
+const CallerSkip int = 0
+
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Debug(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Debug(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Debug(fmt.Sprint(msg), fields...)
 }
-
-func Info(msg interface{}, fields ...zapcore.Field) {
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Info(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Info(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Info(fmt.Sprint(msg), fields...)
 }
-
-func Warn(msg interface{}, fields ...zapcore.Field) {
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Warn(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Warn(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Warn(fmt.Sprint(msg), fields...)
 }
-
-func Error(msg interface{}, fields ...zapcore.Field) {
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Error(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Error(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Error(fmt.Sprint(msg), fields...)
 }
-
-func Dpanic(msg interface{}, fields ...zapcore.Field) {
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Dpanic(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).DPanic(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).DPanic(fmt.Sprint(msg), fields...)
 }
-
-func Panic(msg interface{}, fields ...zapcore.Field) {
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Panic(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Panic(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Panic(fmt.Sprint(msg), fields...)
 }
-
-func Faltal(msg interface{}, fields ...zapcore.Field) {
+//callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+func Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	if vesyncLog == nil {
 		panic("vesynclog is nil")
 	}
-	vesyncLog.WithOptions(zap.AddCaller(),zap.AddCallerSkip(1)).Fatal(fmt.Sprint(msg), fields...)
+	callerSkip=callerSkip+1
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Fatal(fmt.Sprint(msg), fields...)
 }
 
-func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration,maxSize int) {
-	newLogger(serverName, logFilePath, logLevel, "file", rotationTime,maxSize)
+func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration, maxSize int) {
+	newLogger(serverName, logFilePath, logLevel, "file", rotationTime, maxSize)
 }
-func SetOutputWithStdout(serverName,logLevel string) {
-	newLogger(serverName, "", logLevel, "cmd", time.Duration(time.Second),0)
+func SetOutputWithStdout(serverName, logLevel string) {
+	newLogger(serverName, "", logLevel, "cmd", time.Duration(time.Second), 0)
 }
 
-func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration,maxSize int) {
+func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration, maxSize int) {
 	var level zapcore.Level
 	var logCore zapcore.Core
 	var logRotation *lumberjack.Logger
@@ -116,7 +127,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 			EncodeName:     zapcore.FullNameEncoder,
 		}), os.Stdout, level)
 	} else {
-		logRotation = &lumberjack.Logger{Filename: logFilePath,MaxSize:maxSize}
+		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxSize: maxSize}
 		w := zapcore.AddSync(logRotation)
 
 		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
