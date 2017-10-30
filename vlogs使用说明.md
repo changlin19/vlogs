@@ -9,12 +9,13 @@ Zap用于打印json格式的日志，lumberjack.v2用于切割日志文件。
 
 2. 在代码中调用vlogs.SetOutputWithFile()或者vlogs.SetOutputWithStdout()函数，前面一个函数输出到文件，后面一个输出到控制台。
 
-3. SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration)参数说明:
+3. SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration,maxSize int)参数说明:
 
         serverName:服务名
         logLevel:日志等级(debug,info,warn,error,dpanic,panic,fatal,默认为debug)
         logFilePath:日志要输出的目标文件
         rotationTime:切割文件的间隔时间
+        maxSize:文件的最大大小，单位为M
 
 
 4. SetOutputWithStdout(serverName,logLevel string)参数说明:
