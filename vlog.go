@@ -24,7 +24,7 @@ func Debug(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Debug(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Debug(fmt.Sprint(msg), fields...)
 }
 //callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 func Info(callerSkip int,msg interface{}, fields ...zapcore.Field) {
@@ -32,7 +32,7 @@ func Info(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Info(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Info(fmt.Sprint(msg), fields...)
 }
 //callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 func Warn(callerSkip int,msg interface{}, fields ...zapcore.Field) {
@@ -40,7 +40,7 @@ func Warn(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Warn(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Warn(fmt.Sprint(msg), fields...)
 }
 //callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 func Error(callerSkip int,msg interface{}, fields ...zapcore.Field) {
@@ -48,7 +48,7 @@ func Error(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Error(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Error(fmt.Sprint(msg), fields...)
 }
 //callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 func Dpanic(callerSkip int,msg interface{}, fields ...zapcore.Field) {
@@ -56,7 +56,7 @@ func Dpanic(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).DPanic(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).DPanic(fmt.Sprint(msg), fields...)
 }
 //callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 func Panic(callerSkip int,msg interface{}, fields ...zapcore.Field) {
@@ -64,7 +64,7 @@ func Panic(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Panic(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Panic(fmt.Sprint(msg), fields...)
 }
 //callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 func Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field) {
@@ -72,7 +72,7 @@ func Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 		panic("vesynclog is nil")
 	}
 	callerSkip=callerSkip+1
-	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).Fatal(fmt.Sprint(msg), fields...)
+	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Fatal(fmt.Sprint(msg), fields...)
 }
 
 func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration, maxSize int) {
