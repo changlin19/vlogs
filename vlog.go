@@ -14,6 +14,8 @@ import (
 
 var vesyncLog *zap.Logger
 
+var mu=new(sync.Mutex)
+
 var one sync.Once
 
 const CallerSkip int = 0
@@ -146,7 +148,6 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 		}), w, level)
 
 		go func() {
-			defer vesyncLog.Sync()
 			t := time.NewTicker(rotationTime)
 			for {
 				select {
@@ -155,11 +156,16 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 
 				}
 			}
+			mu.Lock()
+			vesyncLog.Sync()
+			mu.Unlock()
 		}()
 	}
 
 	one.Do(func() {
+		mu.Lock()
 		vesyncLog = zap.New(logCore).Named(serverName).With(zap.String("H", hostName))
+		mu.Unlock()
 	})
 }
 
