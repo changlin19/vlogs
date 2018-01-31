@@ -76,15 +76,17 @@ func Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	callerSkip=callerSkip+1
 	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Fatal(fmt.Sprint(msg), fields...)
 }
-
-func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration, maxSize int) {
+//rotationTime 间隔多久切割一次,最小单位为小时,从服务启动的那个小时的00分00秒开始计算
+func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime int, maxSize int) {
 	newLogger(serverName, logFilePath, logLevel, "file", rotationTime, maxSize)
 }
+
 func SetOutputWithStdout(serverName, logLevel string) {
-	newLogger(serverName, "", logLevel, "cmd", time.Duration(time.Second), 0)
+	newLogger(serverName, "", logLevel, "cmd", 0, 0)
 }
 
-func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime time.Duration, maxSize int) {
+//rotationTime 间隔多久切割一次,最小单位为小时,从服务启动的那个小时的00分00秒开始计算
+func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime int, maxSize int) {
 	var level zapcore.Level
 	var logCore zapcore.Core
 	var logRotation *lumberjack.Logger
@@ -148,12 +150,20 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 		}), w, level)
 
 		go func() {
-			t := time.NewTicker(rotationTime)
+			//到整点计时
+			tn:=time.Now()
+			td:=time.Duration(60*60-(tn.Minute()*60+tn.Second()))
+			if td<0{
+				td=0
+			}
+			time.Sleep(td*time.Second)
+
+			t := time.NewTicker(time.Duration(rotationTime)*time.Hour)
 			for {
 				select {
 				case <-t.C:
+					fmt.Println("log rotation,time:",time.Now().String())
 					logRotation.Rotate()
-
 				}
 			}
 			mu.Lock()
