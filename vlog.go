@@ -131,7 +131,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 			EncodeName:     zapcore.FullNameEncoder,
 		}), os.Stdout, level)
 	} else {
-		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxSize: 10240}
+		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxSize: 102400}
 		w := zapcore.AddSync(logRotation)
 
 		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
