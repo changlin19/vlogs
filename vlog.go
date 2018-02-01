@@ -77,16 +77,16 @@ func Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field) {
 	vesyncLog.WithOptions(zap.AddCaller(), zap.AddCallerSkip(callerSkip)).With(zap.Int64("timeStamp",time.Now().UTC().UnixNano())).Fatal(fmt.Sprint(msg), fields...)
 }
 //rotationTime 间隔多久切割一次,最小单位为小时,从服务启动的那个小时的00分00秒开始计算
-func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime int, maxSize int) {
-	newLogger(serverName, logFilePath, logLevel, "file", rotationTime, maxSize)
+func SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime int) {
+	newLogger(serverName, logFilePath, logLevel, "file", rotationTime)
 }
 
 func SetOutputWithStdout(serverName, logLevel string) {
-	newLogger(serverName, "", logLevel, "cmd", 0, 0)
+	newLogger(serverName, "", logLevel, "cmd", 0)
 }
 
 //rotationTime 间隔多久切割一次,最小单位为小时,从服务启动的那个小时的00分00秒开始计算
-func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime int, maxSize int) {
+func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime int) {
 	var level zapcore.Level
 	var logCore zapcore.Core
 	var logRotation *lumberjack.Logger
@@ -131,7 +131,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 			EncodeName:     zapcore.FullNameEncoder,
 		}), os.Stdout, level)
 	} else {
-		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxSize: maxSize}
+		logRotation = &lumberjack.Logger{Filename: logFilePath, MaxSize: 10240}
 		w := zapcore.AddSync(logRotation)
 
 		logCore = zapcore.NewCore(zapcore.NewJSONEncoder(zapcore.EncoderConfig{
