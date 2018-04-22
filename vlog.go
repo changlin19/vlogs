@@ -13,7 +13,7 @@ import (
 )
 
 var vesyncLog *zap.Logger
-
+var level zap.AtomicLevel
 var mu=new(sync.Mutex)
 
 var one sync.Once
@@ -85,29 +85,33 @@ func SetOutputWithStdout(serverName, logLevel string) {
 	newLogger(serverName, "", logLevel, "cmd", 0)
 }
 
+//修改日志等级
+func ChangeLevel(l zapcore.Level){
+	level.SetLevel(l)
+}
+
 //rotationTime 间隔多久切割一次,最小单位为小时,从服务启动的那个小时的00分00秒开始计算
 func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime int) {
-	var level zapcore.Level
 	var logCore zapcore.Core
 	var logRotation *lumberjack.Logger
 
 	switch logLevel {
 	case "debug":
-		level = zap.DebugLevel
+		level = zap.NewAtomicLevelAt(zap.DebugLevel)
 	case "info":
-		level = zap.InfoLevel
+		level = zap.NewAtomicLevelAt(zap.InfoLevel)
 	case "warn":
-		level = zap.WarnLevel
+		level = zap.NewAtomicLevelAt(zap.WarnLevel)
 	case "error":
-		level = zap.ErrorLevel
+		level = zap.NewAtomicLevelAt(zap.ErrorLevel)
 	case "dpanic":
-		level = zap.DPanicLevel
+		level = zap.NewAtomicLevelAt(zap.DPanicLevel)
 	case "panic":
-		level = zap.PanicLevel
+		level = zap.NewAtomicLevelAt(zap.PanicLevel)
 	case "fatal":
-		level = zap.FatalLevel
+		level = zap.NewAtomicLevelAt(zap.FatalLevel)
 	default:
-		level = zap.DebugLevel
+		level = zap.NewAtomicLevelAt(zap.DebugLevel)
 	}
 
 	hostName, err := os.Hostname()
