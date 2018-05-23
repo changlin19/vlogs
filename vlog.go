@@ -166,7 +166,7 @@ func newLogger(serverName, logFilePath, logLevel, logOutput string, rotationTime
 			for {
 				select {
 				case <-t.C:
-					fmt.Println("log rotation,time:",time.Now().String())
+					//fmt.Println("log rotation,time:",time.Now().String())
 					logRotation.Rotate()
 				}
 			}
