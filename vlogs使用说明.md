@@ -1,22 +1,20 @@
-#### 说明
+# 说明
 
 该日志包是使用gopkg.in/natefinch/lumberjack.v2和go.uber.org/zap这两个代码库。
 Zap用于打印json格式的日志，lumberjack.v2用于切割日志文件。
 
-#### 使用方法
+## 使用方法
 
 1. `go get github.com/changlin19/vlogs`
 
 2. 在代码中调用vlogs.SetOutputWithFile()或者vlogs.SetOutputWithStdout()函数，前面一个函数输出到文件，后面一个输出到控制台。
 
-3. SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime time.Duration,maxSize int)参数说明:
+3. SetOutputWithFile(serverName, logFilePath, logLevel string, rotationTime int)参数说明:
 
         serverName:服务名
         logLevel:日志等级(debug,info,warn,error,dpanic,panic,fatal,默认为debug)
-        logFilePath:日志要输出的目标文件
-        rotationTime:切割文件的间隔时间
-        maxSize:文件的最大大小，单位为M
-
+        logFilePath:日志要输出的目标文件路径
+        rotationTime:切割文件的间隔时间，最小时间单位为小时。
 
 4. SetOutputWithStdout(serverName,logLevel string)参数说明:
 
@@ -33,7 +31,7 @@ Zap用于打印json格式的日志，lumberjack.v2用于切割日志文件。
         vlogs.Panic(callerSkip int,msg interface{}, fields ...zapcore.Field)
         vlogs.Faltal(callerSkip int,msg interface{}, fields ...zapcore.Field)
 
-callerSkip用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
+`callerSkip`用于打印代码行数，直接调用该函数，该参数填0。封装一层，该参数+1。
 
 `vlogs.Debug(0,"123")`打印出来的数据:`{"L":"DEBUG","T":"2017-10-19T03:29:34.81968","N":"qwe","C":"vlogs/main.go:9","M":"123","H":"XD-ZJ-20170703N"}`
 
@@ -47,10 +45,16 @@ vlogs默认的字段就是以上打印出来的字段:
     H:主机名
     timeStamp:时间戳(纳秒级别)
 
-
 6. 日志打印函数参数说明:
 
 msg:msg中的数据会放到M这个字段中。
 
 fields:这个参数是用于添加字段的。例如:`vlogs.Debug(0,"123",zap.String("k","v"))`这行代码就添加了一个字段。
 打印出来就是:`{"L":"DEBUG","T":"2017-10-19T03:42:03.59401","N":"qwe","C":"vlogs/main.go:10","M":"123","H":"XD-ZJ-20170703N","k":"v"}`
+
+## 2018-9-30修改
+
+1. 添加一个`SetOutputWithFileWithTimeFormat`函数，比`SetOutputWithFile`函数多了一个`timeFormat`参数，
+这个参数会用在日志切割后的文件的命名中，它只要符合go语言格式化时间的格式就行，比如:`2006-01-02-15`,切割后的文件名称中就会只显示到小时`server-2018-09-30-09.log`
+
+2. 切割后的文件的名称中，把小时显示提前一个小时
